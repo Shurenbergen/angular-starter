@@ -22,7 +22,7 @@ jobs:
           cache: 'npm'
       - run: npm install
 # included tests of this angular-app dont work, so we need skip tests to testing workflow
-#      - run: npm test
+      - run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
       - run: npm run build
       - name: Build the Docker image
         run: docker build -t ghcr.io/shurenbergen/angular-starter:${{ github.run_number }} .
