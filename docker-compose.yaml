@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+    angular-service:
+       container_name: angular-starter
+       image: ghcr.io/shurenbergen/angular-starter:2  # teg latest dont work in Packages so i need hardcode ver-n
+       ports:
+           - "8080:80"
+
+
