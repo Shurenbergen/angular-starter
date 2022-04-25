@@ -36,6 +36,19 @@ jobs:
       - name: Push the Docker image to GitHub Packages
         run: docker push ghcr.io/shurenbergen/angular-starter:${{ github.run_number }}
 
+# # calculating execute time job
+#       - name: calculate time
+#         run: |
+#           started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
+#           completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
+
+#           START_TIME=$(date -d "$started_at" +%s)
+#           END_TIME=$(date -d "$completed_at" +%s)
+
+#           ELAPSE=$(( $END_TIME - $START_TIME ))
+#           echo $ELAPSE
+#           echo "$(($ELAPSE/60))m $(($ELAPSE%60))s"
+
 # send notifications to email     
       - name: Send notification
         if: always()
@@ -47,7 +60,7 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
           # email body as text
-          body: ${{ github.job }} job in workflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }} 
+          body: ${{ github.job }} job in workflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}  
           # send email to
           to: Sham-aleksandr@yandex.ru
           # from email name
