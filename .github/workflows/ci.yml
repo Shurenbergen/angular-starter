@@ -37,10 +37,10 @@ jobs:
         run: docker push ghcr.io/shurenbergen/angular-starter:${{ github.run_number }}
 
 # calculating execute time job
-     - name: calculate time
-       run: |
-         started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
-         completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
+    #  - name: calculate time
+    #    run: |
+    #      started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
+    #      completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
 
         #  START_TIME=$(date -d "$started_at" +%s)
         #  END_TIME=$(date -d "$completed_at" +%s)
