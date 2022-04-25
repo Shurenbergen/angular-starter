@@ -26,21 +26,21 @@ jobs:
       - name: Test
         run: |
           npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
-      - run: npm run build
-      - name: Build the Docker image
-        run: docker build -t ghcr.io/shurenbergen/angular-starter:${{ github.run_number }} .
+#       - run: npm run build
+#       - name: Build the Docker image
+#         run: docker build -t ghcr.io/shurenbergen/angular-starter:${{ github.run_number }} .
 
-# store created docker image in the github packages
-      - name: Login to GitHub Packages
-        run: echo ${{ secrets.AUTH_TOKEN }} | docker login ghcr.io -u Shurenbergen --password-stdin
-      - name: Push the Docker image to GitHub Packages
-        run: docker push ghcr.io/shurenbergen/angular-starter:${{ github.run_number }}
+# # store created docker image in the github packages
+#       - name: Login to GitHub Packages
+#         run: echo ${{ secrets.AUTH_TOKEN }} | docker login ghcr.io -u Shurenbergen --password-stdin
+#       - name: Push the Docker image to GitHub Packages
+#         run: docker push ghcr.io/shurenbergen/angular-starter:${{ github.run_number }}
 
 # calculating execute time job
       - name: calculate time
         run: |
-          started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
-          completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
+          started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs) 
+          completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs)
           
           echo $started_at
           echo $completed_at
