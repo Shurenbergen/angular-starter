@@ -3,8 +3,9 @@ name: GitHub Actions Workflow
 on:
   workflow_dispatch:
   push:
-    branches:
-      - 'master'
+    branches: master
+  pull_request:
+    branches: master
 
 jobs:
 
@@ -52,45 +53,7 @@ jobs:
 
 #time reporter tool
       - name: Time reporter
-        uses: actions/github-script@v6
-        id: duration
-        with:
-          script: |
-            if (context.eventName != 'pull_request') {
-              proccess.exit(0)
-            }
-            const currentTime = new Date().getTime();
-            const currentRun = await github.rest.actions.getWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId
-            });
-            const startedAt = currentRun.data.run_started_at
-            const currentRunDurationInMillis = currentTime - new Date(startedAt).getTime();
-          
-            const workflowId = currentRun.data.workflow_id
-            const historical_runs = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: workflowId
-            });
-            const latestRunsOnMaster = historical_runs.data.workflow_runs.filter( x =>
-              (x.head_branch === 'master' || x.head_branch === 'main') &&
-              x.status === 'completed' &&
-              x.conclusion == 'success'
-            );
-            var outputMessage = ''
-            if (latestRunsOnMaster.length === 0) {
-              outputMessage = "No data for historical runs on master/main branch found. Can't compare."
-            } else {
-              const latestRunOnMaster = latestRunsOnMaster[0]
-              const latestMasterRunDurationInMillis = new Date(latestRunOnMaster.updated_at).getTime() - new Date(latestRunOnMaster.run_started_at).getTime();
-              const diffInSeconds = (currentRunDurationInMillis - latestMasterRunDurationInMillis) / 1000
-              const percentageDiff = ((1 - (currentRunDurationInMillis/latestMasterRunDurationInMillis)) * 100).toFixed(2)
-              const outcome = (diffInSeconds > 0) ? "an increase" : "a decrease"
-         
-              outputMessage =  '🕒 Workflow \"' + context.workflow + '\" took ' +  (currentRunDurationInMillis / 1000) + 's which is ' + outcome + ' with ' + Math.abs(diffInSeconds) + 's (' + Math.abs(percentageDiff) + '%) compared to latest run on master/main.'
-            })       
+        uses: DeviesDevelopment/workflow-timer@v0.0.1    
 
 # send notifications to email     
       - name: Send notification
