@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: master
-  pull_request:
-    branches: master
 
 jobs:
 
@@ -51,9 +49,9 @@ jobs:
 #           echo $ELAPSE
 #           echo "$(($ELAPSE/60))m $(($ELAPSE%60))s"
 
-#time reporter tool
+# time reporter tool
       - name: Time reporter
-        uses: DeviesDevelopment/workflow-timer@v0.0.1    
+        uses: DeviesDevelopment/workflow-timer@v0.0.2    
 
 # send notifications to email     
       - name: Send notification
