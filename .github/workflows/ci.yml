@@ -27,6 +27,7 @@ jobs:
         run: |
           npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
       - run: npm run build
+        if: success()
       - name: Build the Docker image
         run: docker build -t ghcr.io/shurenbergen/angular-starter:${{ github.run_number }} .
 
@@ -48,6 +49,10 @@ jobs:
 #           ELAPSE=$(( $END_TIME - $START_TIME ))
 #           echo $ELAPSE
 #           echo "$(($ELAPSE/60))m $(($ELAPSE%60))s"
+
+#time reporter tool
+      - name: Time reporter
+        uses: DeviesDevelopment/workflow-timer@v0.0.1
 
 # send notifications to email     
       - name: Send notification
