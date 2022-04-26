@@ -15,27 +15,27 @@ jobs:
 # run tests, run build, create a docker image based on dockerfile      
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: install node packages
-        uses: actions/setup-node@v3
-        with:
-          node-version: '17.9.0'
-          cache: 'npm'
-      - run: npm install
-      - name: Setup npm ci
-        run: npm ci
-      - name: Test
-        run: |
-          npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
-      - run: npm run build
-        if: success()
-      - name: Build the Docker image
-        run: docker build -t ghcr.io/shurenbergen/angular-starter:${{ github.run_number }} .
+#       - name: install node packages
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '17.9.0'
+#           cache: 'npm'
+#       - run: npm install
+#       - name: Setup npm ci
+#         run: npm ci
+#       - name: Test
+#         run: |
+#           npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+#       - run: npm run build
+#         if: success()
+#       - name: Build the Docker image
+#         run: docker build -t ghcr.io/shurenbergen/angular-starter:${{ github.run_number }} .
 
-# store created docker image in the github packages
-      - name: Login to GitHub Packages
-        run: echo ${{ secrets.AUTH_TOKEN }} | docker login ghcr.io -u Shurenbergen --password-stdin
-      - name: Push the Docker image to GitHub Packages
-        run: docker push ghcr.io/shurenbergen/angular-starter:${{ github.run_number }}
+# # store created docker image in the github packages
+#       - name: Login to GitHub Packages
+#         run: echo ${{ secrets.AUTH_TOKEN }} | docker login ghcr.io -u Shurenbergen --password-stdin
+#       - name: Push the Docker image to GitHub Packages
+#         run: docker push ghcr.io/shurenbergen/angular-starter:${{ github.run_number }}
 
 # # calculating execute time job
 #       - name: calculate time
@@ -52,7 +52,45 @@ jobs:
 
 #time reporter tool
       - name: Time reporter
-        uses: DeviesDevelopment/workflow-timer@v0.0.1
+        uses: actions/github-script@v6
+        id: duration
+        with:
+          script: |
+            if (context.eventName != 'pull_request') {
+              proccess.exit(0)
+            }
+            const currentTime = new Date().getTime();
+            const currentRun = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId
+            });
+            const startedAt = currentRun.data.run_started_at
+            const currentRunDurationInMillis = currentTime - new Date(startedAt).getTime();
+          
+            const workflowId = currentRun.data.workflow_id
+            const historical_runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflowId
+            });
+            const latestRunsOnMaster = historical_runs.data.workflow_runs.filter( x =>
+              (x.head_branch === 'master' || x.head_branch === 'main') &&
+              x.status === 'completed' &&
+              x.conclusion == 'success'
+            );
+            var outputMessage = ''
+            if (latestRunsOnMaster.length === 0) {
+              outputMessage = "No data for historical runs on master/main branch found. Can't compare."
+            } else {
+              const latestRunOnMaster = latestRunsOnMaster[0]
+              const latestMasterRunDurationInMillis = new Date(latestRunOnMaster.updated_at).getTime() - new Date(latestRunOnMaster.run_started_at).getTime();
+              const diffInSeconds = (currentRunDurationInMillis - latestMasterRunDurationInMillis) / 1000
+              const percentageDiff = ((1 - (currentRunDurationInMillis/latestMasterRunDurationInMillis)) * 100).toFixed(2)
+              const outcome = (diffInSeconds > 0) ? "an increase" : "a decrease"
+         
+              outputMessage =  '🕒 Workflow \"' + context.workflow + '\" took ' +  (currentRunDurationInMillis / 1000) + 's which is ' + outcome + ' with ' + Math.abs(diffInSeconds) + 's (' + Math.abs(percentageDiff) + '%) compared to latest run on master/main.'
+            })       
 
 # send notifications to email     
       - name: Send notification
