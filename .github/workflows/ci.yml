@@ -72,7 +72,9 @@ jobs:
 
       - name: environment of the current job
         run: |
-          echo job_id: ${{ github.job }}
+          echo job_name: ${{ github.job }}
+
+          echo job_id: ${{ github.job_id }}
           
           echo job of: ${{ github.repository }}
           
@@ -86,11 +88,12 @@ jobs:
           WORKFLOW="${{ github.workflow }}"
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
+          JOB_ID="${{ github.job_id }}"
       - name: Parsing started time
         run: |
-          STARTED=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ github.job_id }} | jq -r '.started_at')
-          echo ${{ STARTED }}
-#          JOB_ID="${{ github.job_id }}"
+          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ github.job_id }} | jq -r '.started_at'
+#          echo ${{ STARTED }}
+#          
 # calculating execute time job ans send email message
 
   notify:
