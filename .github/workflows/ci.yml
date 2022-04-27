@@ -99,7 +99,7 @@ jobs:
 
 # calculating execute time job
       - name: calculate time
-        run: echo "${{ env.RUN_ID }}"
+        run: echo "${{ github.run_id }}"
         # run: |
         #   started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ env.RUN_ID }}/jobs | jq -r '.jobs[].started_at')
         #   completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ env.RUN_ID }}/jobs | jq -r '.jobs[].completed_at')
