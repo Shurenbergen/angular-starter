@@ -84,7 +84,7 @@ jobs:
 
           RUN_ID="${{ github.run_id }}"
           WORKFLOW="${{ github.workflow }}"
-          JOB_STATUS="$(${{ job.status }}"
+          JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
           JOB_ID="${{ github.job }}"
 # calculating execute time job ans send email message
