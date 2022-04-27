@@ -100,26 +100,26 @@ jobs:
           started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
           completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
 
-#           START_TIME=$(date -d "$started_at" +%s)
-#           END_TIME=$(date -d "$completed_at" +%s)
+          START_TIME=$(date -d "$started_at" +%s)
+          END_TIME=$(date -d "$completed_at" +%s)
 
-#           ELAPSE=$(( $END_TIME - $START_TIME ))
-#           echo $ELAPSE
-#           echo "$(($ELAPSE/60))m $(($ELAPSE%60))s"
+          ELAPSE=$(( $END_TIME - $START_TIME ))
+          echo $ELAPSE
+          echo "$(($ELAPSE/60))m $(($ELAPSE%60))s"
 
-# # send notifications to email     
-#       - name: Send notification
-#         if: always()
-#         uses: dawidd6/action-send-mail@v2
-#         with:
-#           server_address: smtp.gmail.com
-#           server_port: 587
-#           username: ${{ secrets.EMAIL_USERNAME }}
-#           password: ${{ secrets.EMAIL_PASSWORD }}
-#           subject: ${{ JOB_ID }} job of ${{ REPO }} has ${{ JOB_STATUS }}
-#           # email body as text
-#           body: ${{ JOB_ID }} job in workflow ${{ WORKFLOW }} of ${{ REPO }} has ${{ JOB_STATUS }} 
-#           # send email to
-#           to: Sham-aleksandr@yandex.ru
-#           # from email name
-#           from: Sham Aleksandr
+# send notifications to email     
+      - name: Send notification
+        if: always()
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "${{ JOB_ID }}" job of "${{ REPO }}" has "${{ JOB_STATUS }}"
+          # email body as text
+          body: "${{ JOB_ID }}" job in workflow "${{ WORKFLOW }}" of "${{ REPO }}" has "${{ JOB_STATUS }}" execution time "$(($ELAPSE/60))m $(($ELAPSE%60))s"
+          # send email to
+          to: Sham-aleksandr@yandex.ru
+          # from email name
+          from: Sham Aleksandr
