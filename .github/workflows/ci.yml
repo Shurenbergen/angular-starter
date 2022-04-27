@@ -88,16 +88,16 @@ jobs:
           
 # calculating execute time job ans send email message
 
-  notify:
-    needs: build
-#    runs-on: ubuntu-20.04
-    steps:
-# calculating execute time job
-      - name: calculate time
-#        run: echo "${{ github.run_id }}"
-        run: |
-          echo run_id: ${{ github.run_id }}
-          echo job_id from job above: ${{ JOB_ID }}
+#   notify:
+#     needs: build
+# #    runs-on: ubuntu-20.04
+#     steps:
+# # calculating execute time job
+#       - name: calculate time
+# #        run: echo "${{ github.run_id }}"
+#         run: |
+#           echo run_id: ${{ github.run_id }}
+#           echo job_id from job above: ${{ JOB_ID }}
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ JOB_ID }} | jq -r '.started_at'
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at'
 #          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')"
