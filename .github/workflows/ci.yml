@@ -73,41 +73,31 @@ jobs:
       - name: environment of the current job
         run: |
           echo job_name: ${{ github.job }}
-          
-          echo job of: ${{ github.repository }}
-          
-          echo status: ${{ job.status }}
-          
-          echo workflow: ${{ github.workflow }}
-          
           echo run_id: ${{ github.run_id }}
-
+          echo job of: ${{ github.repository }}
+          echo status: ${{ job.status }}
+          echo workflow: ${{ github.workflow }}
+          echo workflow: ${{ job.id }}
+          
+          JOB_NAME="${{ github.job }}"
           RUN_ID="${{ github.run_id }}"
           WORKFLOW="${{ github.workflow }}"
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
-          JOB_ID="${{ github.job }}"
-
-      - name: Parsing started time
-        run: |
-          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at'
-#          echo ${{ STARTED }}
-#          
+          JOB_ID="${{ job.id }}"
+          
 # calculating execute time job ans send email message
 
   notify:
     needs: build
-    runs-on: ubuntu-20.04
-
+#    runs-on: ubuntu-20.04
     steps:
 # calculating execute time job
       - name: calculate time
 #        run: echo "${{ github.run_id }}"
         run: |
           echo run_id: ${{ github.run_id }}
-#          echo job_id from job above: ${{ STARTED }}
- #         echo job_id: ${{ JOB_ID }}
-
+          echo job_id from job above: ${{ JOB_ID }}
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ JOB_ID }} | jq -r '.started_at'
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at'
 #          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')"
@@ -132,9 +122,9 @@ jobs:
 #           server_port: 587
 #           username: ${{ secrets.EMAIL_USERNAME }}
 #           password: ${{ secrets.EMAIL_PASSWORD }}
-#           subject: "${{ JOB_ID }}" job of "${{ REPO }}" has "${{ JOB_STATUS }}"
+#           subject: "${{ JOB_NAME }}" job of "${{ REPO }}" has "${{ JOB_STATUS }}"
 #           # email body as text
-#           body: "${{ JOB_ID }}" job in workflow "${{ WORKFLOW }}" of "${{ REPO }}" has "${{ JOB_STATUS }}" execution time "$(($ELAPSE/60))m $(($ELAPSE%60))s"
+#           body: "${{ JOB_NAME }}" job in workflow "${{ WORKFLOW }}" of "${{ REPO }}" has "${{ JOB_STATUS }}" execution time "$(($ELAPSE/60))m $(($ELAPSE%60))s"
 #           # send email to
 #           to: Sham-aleksandr@yandex.ru
 #           # from email name
