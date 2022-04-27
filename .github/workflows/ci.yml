@@ -86,8 +86,9 @@ jobs:
           WORKFLOW="${{ github.workflow }}"
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
-          JOB_ID="${{ github.job }}"
-
+          JOB_ID="${{ github.job_id }}"
+          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ github.job_id }} | jq -r '.started_at')"
+          echo ${{ started_at }}
 # calculating execute time job ans send email message
 
   notify:
@@ -99,9 +100,11 @@ jobs:
       - name: calculate time
 #        run: echo "${{ github.run_id }}"
         run: |
+          echo job_id: ${{ JOB_ID }}
           echo run_id: ${{ github.run_id }}
-          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at'
-          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at'
+          echo job_id from job above: ${{ started_at }}
+#          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ JOB_ID }} | jq -r '.started_at'
+#          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at'
 #          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')"
 #          completed_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')"
                     
