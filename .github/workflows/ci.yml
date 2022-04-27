@@ -49,9 +49,9 @@ jobs:
 #           echo $ELAPSE
 #           echo "$(($ELAPSE/60))m $(($ELAPSE%60))s"
 
-# time reporter tool
-      - name: Time reporter
-        uses: DeviesDevelopment/workflow-timer@v0.0.2    
+# # time reporter tool
+#       - name: Time reporter
+#         uses: DeviesDevelopment/workflow-timer@v0.0.2    
 
 # # send notifications to email     
 #       - name: Send notification
@@ -100,18 +100,19 @@ jobs:
       - name: calculate time
 #        run: echo "${{ github.run_id }}"
         run: |
-          started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
-          completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
+          echo run_id: ${{ github.run_id }}
+          STARTED_AT=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
+          COMPLETED_AT=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
+                    
+          echo ${{ STARTED_AT }}
+          echo ${{ COMPLETED_AT }}
           
-          echo ${{ started_at }}
-          echo ${{ completed_at }}
-          
-          START_TIME="$(date -d "$started_at" +%s)"
-          END_TIME="$(date -d "$completed_at" +%s)"
+#          START_TIME="$(date -d "$started_at" +%s)"
+#          END_TIME="$(date -d "$completed_at" +%s)"
 
-          ELAPSE="$(( $END_TIME - $START_TIME ))"
-          echo ${{ ELAPSE }}
-          echo ${{ ((${{ ELAPSE }}/60))m $((${{ ELAPSE }}%60))s }}
+#          ELAPSE="$(( $END_TIME - $START_TIME ))"
+#          echo ${{ ELAPSE }}
+#          echo ${{ ((${{ ELAPSE }}/60))m $((${{ ELAPSE }}%60))s }}
 
 # # send notifications to email     
 #       - name: Send notification
