@@ -92,6 +92,8 @@ jobs:
 # calculating execute time job ans send email message
 
   notify:
+    requires:
+      - build
     runs-on: ubuntu-20.04
 
     steps:
