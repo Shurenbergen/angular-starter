@@ -87,8 +87,7 @@ jobs:
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
           JOB_ID="${{ github.job }}"
-        env: 
-          RUN_ID: "${{ github.run_id }}"
+
 # calculating execute time job ans send email message
 
   notify:
@@ -99,20 +98,20 @@ jobs:
 
 # calculating execute time job
       - name: calculate time
-        run: echo "${{ github.run_id }}"
-        # run: |
-        #   started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ env.RUN_ID }}/jobs | jq -r '.jobs[].started_at')
-        #   completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ env.RUN_ID }}/jobs | jq -r '.jobs[].completed_at')
+#        run: echo "${{ github.run_id }}"
+        run: |
+          started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
+          completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
           
-        #   echo ${{ started_at }}
-        #   echo ${{ completed_at }}
+          echo ${{ started_at }}
+          echo ${{ completed_at }}
           
- #         START_TIME="$(date -d "$started_at" +%s)"
- #         END_TIME="$(date -d "$completed_at" +%s)"
+         START_TIME="$(date -d "$started_at" +%s)"
+         END_TIME="$(date -d "$completed_at" +%s)"
 
- #         ELAPSE="$(( $END_TIME - $START_TIME ))"
- #         echo ${{ ELAPSE }}
- #         echo ${{ ((${{ ELAPSE }}/60))m $((${{ ELAPSE }}%60))s }}
+         ELAPSE="$(( $END_TIME - $START_TIME ))"
+         echo ${{ ELAPSE }}
+         echo ${{ ((${{ ELAPSE }}/60))m $((${{ ELAPSE }}%60))s }}
 
 # # send notifications to email     
 #       - name: Send notification
