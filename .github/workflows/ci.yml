@@ -73,27 +73,33 @@ jobs:
       - name: environment of the current job
         run: |
           echo job_id: ${{ github.job }}
-          JOB_ID=$(${{ github.job }})
+          
           echo job of: ${{ github.repository }}
-          REPO=$(${{ github.repository }})
+          
           echo status: ${{ job.status }}
-          JOB_STATUS=$(${{ job.status }})
+          
           echo workflow: ${{ github.workflow }}
-          WORKFLOW=$(${{ github.workflow }})
+          
           echo run_id: ${{ github.run_id }}
-          RUN_ID=$(${{ github.run_id }})
+
+        outputs:
+          RUN_ID: ${{ github.run_id }}
+          WORKFLOW: $(${{ github.workflow }}
+          JOB_STATUS: $(${{ job.status }}
+          REPO: ${{ github.repository }}
+          JOB_ID: ${{ github.job }}
 # calculating execute time job ans send email message
 
-#   notify:
-#     runs-on: ubuntu-20.04
+  notify:
+    runs-on: ubuntu-20.04
 
-#     steps:
+    steps:
 
-# # calculating execute time job
-#       - name: calculate time
-#         run: |
-#           started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/${{ JOB_ID }} | jq -r '.jobs[].started_at')
-#           completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/${{ JOB_ID }} | jq -r '.jobs[].completed_at')
+# calculating execute time job
+      - name: calculate time
+        run: |
+          started_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
+          completed_at=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at')
 
 #           START_TIME=$(date -d "$started_at" +%s)
 #           END_TIME=$(date -d "$completed_at" +%s)
