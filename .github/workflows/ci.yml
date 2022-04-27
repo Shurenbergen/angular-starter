@@ -106,7 +106,7 @@ jobs:
 #        run: echo "${{ github.run_id }}"
         run: |
           echo run_id: ${{ github.run_id }}
-          echo job_id from job above: ${{ STARTED }}
+#          echo job_id from job above: ${{ STARTED }}
  #         echo job_id: ${{ JOB_ID }}
 
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ JOB_ID }} | jq -r '.started_at'
