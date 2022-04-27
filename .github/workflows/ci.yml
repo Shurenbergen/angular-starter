@@ -73,14 +73,15 @@ jobs:
       - name: environment of the current job
         run: |
           echo job_id: ${{ github.job }}
-          JOB_ID=${{ github.job }}
+          JOB_ID=$(${{ github.job }})
           echo job of: ${{ github.repository }}
-          REPO=${{ github.repository }}
+          REPO=$(${{ github.repository }})
           echo status: ${{ job.status }}
-          JOB_STATUS=${{ job.status }}
+          JOB_STATUS=$(${{ job.status }})
           echo workflow: ${{ github.workflow }}
-          WORKFLOW=${{ github.workflow }}
-        
+          WORKFLOW=$(${{ github.workflow }})
+          echo run_id: ${{ github.run_id }}
+          RUN_ID=$(${{ github.run_id }})
 # calculating execute time job ans send email message
 
 #   notify:
