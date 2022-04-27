@@ -77,15 +77,16 @@ jobs:
           echo job of: ${{ github.repository }}
           echo status: ${{ job.status }}
           echo workflow: ${{ github.workflow }}
-          echo workflow: ${{ job.id }}
+          echo job_id: ${{ GITHUB_JOB }}
           
           JOB_NAME="${{ github.job }}"
           RUN_ID="${{ github.run_id }}"
           WORKFLOW="${{ github.workflow }}"
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
-          JOB_ID="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ job_id}} | jq -r '.id')"
-          echo ${{ JOB_ID}}
+          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ GITHUB_JOB }} | jq -r '.id'
+          echo ${{ GITHUB_JOB}}
+          echo ${{ GITHUB_RUN_ID }}
 # calculating execute time job ans send email message
 
 #   notify:
