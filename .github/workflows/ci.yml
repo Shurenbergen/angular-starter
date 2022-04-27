@@ -85,8 +85,8 @@ jobs:
           WORKFLOW="${{ github.workflow }}"
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
-          JOB_BUILD_ID="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')"
-          echo ${{ JOB_BUILD_ID }}
+          BUILD="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')"
+          echo ${{ BUILD }}
      
      #          echo "action_state=yellow" >> $GITHUB_ENV     
 # calculating execute time job ans send email message
