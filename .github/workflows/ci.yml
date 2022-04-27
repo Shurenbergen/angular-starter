@@ -90,8 +90,8 @@ jobs:
 
       - name: Parsing started time
         run: |
-          STARTED=$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')
-          echo ${{ STARTED }}
+          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at'
+#          echo ${{ STARTED }}
 #          
 # calculating execute time job ans send email message
 
