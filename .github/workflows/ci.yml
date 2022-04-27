@@ -87,8 +87,8 @@ jobs:
           JOB_STATUS="${{ job.status }}"
           REPO="${{ github.repository }}"
           JOB_ID="${{ github.job_id }}"
-          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ github.job_id }} | jq -r '.started_at')"
-          echo ${{ started_at }}
+          STARTED="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ github.job_id }} | jq -r '.started_at')"
+          echo ${{ STARTED }}
 # calculating execute time job ans send email message
 
   notify:
@@ -102,7 +102,7 @@ jobs:
         run: |
           echo job_id: ${{ JOB_ID }}
           echo run_id: ${{ github.run_id }}
-          echo job_id from job above: ${{ started_at }}
+          echo job_id from job above: ${{ STARTED }}
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ JOB_ID }} | jq -r '.started_at'
 #          curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].completed_at'
 #          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].started_at')"
