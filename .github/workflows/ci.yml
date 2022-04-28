@@ -71,6 +71,8 @@ jobs:
 #           from: Sham Aleksandr
 
       - name: environment of the current job
+        env:
+          first_job: curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id'
         run: |
           echo job_name: ${{ github.job }}
           echo run_id: ${{ github.run_id }}
@@ -79,7 +81,7 @@ jobs:
           echo workflow: ${{ github.workflow }}
     
           first_job="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')" >> $GITHUB_ENV
-          echo build_job_id: ${{ env.first_job }}
+          echo build_job_id: "${{ env.first_job }}"
 #          JOB_NAME="${{ github.job }}" >> $GITHUB_ENV
 #          RUN_ID="${{ github.run_id }}" >> $GITHUB_ENV
 #          WORKFLOW="${{ github.workflow }}" >> $GITHUB_ENV
@@ -96,7 +98,7 @@ jobs:
 # calculating execute time job
       - name: calculate time
         run: |
-          echo build_job_id: ${{ env.first_job }}
+          echo build_job_id: "${{ env.first_job }}"
 #          started_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
 #          completed_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.completed_at')"
      
