@@ -79,6 +79,7 @@ jobs:
           echo workflow: ${{ github.workflow }}
     
           first_job="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')" >> $GITHUB_ENV
+          echo build_job_id: ${{ env.first_job }}
 #          JOB_NAME="${{ github.job }}" >> $GITHUB_ENV
 #          RUN_ID="${{ github.run_id }}" >> $GITHUB_ENV
 #          WORKFLOW="${{ github.workflow }}" >> $GITHUB_ENV
@@ -88,7 +89,6 @@ jobs:
      
      #          echo "action_state=yellow" >> $GITHUB_ENV     
 # calculating execute time job ans send email message
-
   notify: 
     needs: build
     runs-on: ubuntu-20.04
@@ -96,11 +96,12 @@ jobs:
 # calculating execute time job
       - name: calculate time
         run: |
-          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
-          completed_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.jobs[].completed_at')"
-                    
-          echo ${{ started_at }}
-          echo ${{ completed_at }}
+          echo build_job_id: ${{ env.first_job }}
+#          started_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
+#          completed_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.completed_at')"
+     
+ #         echo ${{ started_at }}
+#          echo ${{ completed_at }}
           
         #  START_TIME="$(date -d "$started_at" +%s)" 
         #  END_TIME="$(date -d "$completed_at" +%s)"
