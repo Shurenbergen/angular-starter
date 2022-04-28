@@ -95,13 +95,12 @@ jobs:
     steps:
 # calculating execute time job
       - name: calculate time
-#        run: echo "${{ github.run_id }}"
         run: |
-         started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
-         completed_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.jobs[].completed_at')"
+          started_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
+          completed_at="$(curl   -H "Accept: application/vnd.github.v3+json"   https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.jobs[].completed_at')"
                     
-         echo ${{ started_at }}
-         echo ${{ completed_at }}
+          echo ${{ started_at }}
+          echo ${{ completed_at }}
           
         #  START_TIME="$(date -d "$started_at" +%s)" 
         #  END_TIME="$(date -d "$completed_at" +%s)"
