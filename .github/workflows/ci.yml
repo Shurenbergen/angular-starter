@@ -71,8 +71,6 @@ jobs:
 #           from: Sham Aleksandr
 
       - name: environment of the current job
-        env:
-          first_job: curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id'
         run: |
           echo job_name: ${{ github.job }}
           echo run_id: ${{ github.run_id }}
