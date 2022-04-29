@@ -111,9 +111,9 @@ jobs:
           START_TIME="$(date -d "$started_at" +%s)"
           END_TIME="$(date -d "$completed_at" +%s)"
 
-          ELAPSE="$(( $END_TIME - $START_TIME ))"
+          ELAPSE=$(( $END_TIME - $START_TIME ))
           echo $ELAPSE
-          execute_time=$($(($ELAPSE/60))m $(($ELAPSE%60))s)
+          execute_time="$(($ELAPSE/60))m $(($ELAPSE%60))s"
           echo ::set-output name=EXEC_TIME::$execute_time
 
 # send notifications to email     
