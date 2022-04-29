@@ -115,9 +115,7 @@ jobs:
           echo $ELAPSE
           execute_time="$(($ELAPSE/60))m $(($ELAPSE%60))s"
           echo $execute_time
-          echo ::set-output name=EXEC_TIME::$execute_time
-          execute_time2=$(($ELAPSE/60))m $(($ELAPSE%60))s
-          echo $execute_time2
+          echo ::set-env name=EXEC_TIME::$execute_time
 
 # send notifications to email     
       - name: Send notification
