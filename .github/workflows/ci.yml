@@ -13,13 +13,14 @@ jobs:
     steps:
 # run tests, run build, create a docker image based on dockerfile      
       - name: Check out repository code
+        id: checkout
         uses: actions/checkout@v3
-      - name: install node packages
-        uses: actions/setup-node@v3
-        with:
-          node-version: '17.9.0'
-          cache: 'npm'
-      - run: npm install
+      # - name: install node packages
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: '17.9.0'
+      #     cache: 'npm'
+      # - run: npm install
 #       - name: Setup npm ci
 #         run: npm ci
 #       - name: Test
@@ -71,6 +72,7 @@ jobs:
 #           from: Sham Aleksandr
 
       - name: environment of the current job
+        id: env-job
         run: |
           echo job_name: ${{ github.job }}
           echo run_id: ${{ github.run_id }}
@@ -78,8 +80,15 @@ jobs:
           echo status: ${{ job.status }}
           echo workflow: ${{ github.workflow }}
     
-          first_job="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')" >> $GITHUB_ENV
-          echo build_job_id: "${{ env.first_job }}"
+          first_job="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')" 
+          echo "build_job_id: ${{ env.first_job }}"
+          echo "build_job_id: $first_job"
+          cat $GITHUB_ENV
+          cat "first_job_id=$first_job" >> $GITHUB_ENV
+          cat $GITHUB_ENV
+          echo ::set-output name=JOB_ID::$first_job
+    outputs:
+      output1: ${{ steps.env-job.outputs.JOB_ID }}
 #          JOB_NAME="${{ github.job }}" >> $GITHUB_ENV
 #          RUN_ID="${{ github.run_id }}" >> $GITHUB_ENV
 #          WORKFLOW="${{ github.workflow }}" >> $GITHUB_ENV
@@ -96,7 +105,7 @@ jobs:
 # calculating execute time job
       - name: calculate time
         run: |
-          echo build_job_id: "${{ env.first_job }}"
+          echo build_job_id: "${{ needs.build.outputs.output1 }}"
 #          started_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
 #          completed_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.completed_at')"
      
