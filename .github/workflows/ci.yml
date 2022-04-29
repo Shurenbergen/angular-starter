@@ -107,9 +107,6 @@ jobs:
           build_job_id="${{ needs.build.outputs.build_job_id }}"
           started_at=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/$build_job_id | jq -r '.started_at')
           completed_at=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/$build_job_id | jq -r '.completed_at')
-     
-          echo "${{ started_at }}"
-          echo "${{ completed_at }}"
           
           START_TIME="$(date -d "$started_at" +%s)"
           END_TIME="$(date -d "$completed_at" +%s)"
