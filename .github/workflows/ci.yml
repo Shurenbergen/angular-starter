@@ -3,7 +3,9 @@ name: GitHub Actions Workflow
 on:
   workflow_dispatch:
   push:
-    branches: master
+    branches: 
+     - master
+     - feature-time
 
 jobs:
 
@@ -81,11 +83,10 @@ jobs:
           echo workflow: ${{ github.workflow }}
     
           first_job="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')" 
-          echo "build_job_id: ${{ env.first_job }}"
           echo "build_job_id: $first_job"
           echo ::set-output name=JOB_ID::$first_job
     outputs:
-      output1: ${{ steps.env-job.outputs.JOB_ID }}
+      build_job_id: ${{ steps.env-job.outputs.JOB_ID }}
 #          JOB_NAME="${{ github.job }}" >> $GITHUB_ENV
 #          RUN_ID="${{ github.run_id }}" >> $GITHUB_ENV
 #          WORKFLOW="${{ github.workflow }}" >> $GITHUB_ENV
@@ -101,34 +102,36 @@ jobs:
     steps:
 # calculating execute time job
       - name: calculate time
+        id: calc-time
         run: |
-          echo build_job_id: "${{ needs.build.outputs.output1 }}"
-#          started_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.started_at')"
-#          completed_at="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/${{ env.first_job }} | jq -r '.completed_at')"
+          build_job_id="${{ needs.build.outputs.build_job_id }}"
+          started_at=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/$build_job_id | jq -r '.started_at')
+          completed_at=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/jobs/$build_job_id | jq -r '.completed_at')
      
- #         echo ${{ started_at }}
-#          echo ${{ completed_at }}
+          echo "${{ started_at }}"
+          echo "${{ completed_at }}"
           
-        #  START_TIME="$(date -d "$started_at" +%s)" 
-        #  END_TIME="$(date -d "$completed_at" +%s)"
+          START_TIME="$(date -d "$started_at" +%s)"
+          END_TIME="$(date -d "$completed_at" +%s)"
 
-        #  ELAPSE="$(( $END_TIME - $START_TIME ))" >> $GITHUB_ENV 
-        #  echo ${{ env.ELAPSE }}
-        #  echo ${{ ((${{ env.ELAPSE }}/60))m $((${{ env.ELAPSE }}%60))s }} >> $GITHUB_ENV 
+          ELAPSE="$(( $END_TIME - $START_TIME ))"
+          echo $ELAPSE
+          execute_time=$($(($ELAPSE/60))m $(($ELAPSE%60))s)
+          echo ::set-output name=EXEC_TIME::$execute_time
 
-# # send notifications to email     
-#       - name: Send notification
-#         if: always()
-#         uses: dawidd6/action-send-mail@v2
-#         with:
-#           server_address: smtp.gmail.com
-#           server_port: 587
-#           username: ${{ secrets.EMAIL_USERNAME }}
-#           password: ${{ secrets.EMAIL_PASSWORD }}
-#           subject: "${{ JOB_NAME }}" job of "${{ REPO }}" has "${{ JOB_STATUS }}"
-#           # email body as text
-#           body: "${{ JOB_NAME }}" job in workflow "${{ WORKFLOW }}" of "${{ REPO }}" has "${{ JOB_STATUS }}" execution time "$(($ELAPSE/60))m $(($ELAPSE%60))s"
-#           # send email to
-#           to: Sham-aleksandr@yandex.ru
-#           # from email name
-#           from: Sham Aleksandr
+# send notifications to email     
+      - name: Send notification
+        if: always()
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+          # email body as text
+          body: "${{ github.job }} job in workflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }} with execution time = ${{ env.EXEC_TIME }}" 
+          # send email to
+          to: Sham-aleksandr@yandex.ru
+          # from email name
+          from: Sham Aleksandr
