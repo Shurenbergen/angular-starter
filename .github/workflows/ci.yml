@@ -83,9 +83,6 @@ jobs:
           first_job="$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/Shurenbergen/angular-starter/actions/runs/${{ github.run_id }}/jobs | jq -r '.jobs[].id')" 
           echo "build_job_id: ${{ env.first_job }}"
           echo "build_job_id: $first_job"
-          cat $GITHUB_ENV
-          cat "first_job_id=$first_job" >> $GITHUB_ENV
-          cat $GITHUB_ENV
           echo ::set-output name=JOB_ID::$first_job
     outputs:
       output1: ${{ steps.env-job.outputs.JOB_ID }}
